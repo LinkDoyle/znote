@@ -1,4 +1,3 @@
-import { Link } from './../../.history/src/parser/ast_20191126110414';
 export enum TokenType {
     Eof = -1,
     Unknown = 0,
@@ -109,7 +108,7 @@ export class Scanner {
                     }
                 default:
                     const start = offset;
-                    while(next.indexOf('\n*_`') != -1 && offset < length) {
+                    while('\n*_`'.indexOf(next) == -1 && offset < length) {
                         next = this._input[++offset];
                     }
                     if(start == offset)

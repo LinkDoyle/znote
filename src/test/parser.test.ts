@@ -14,6 +14,6 @@ it('scanner', () => {
 
     tokens.forEach(token => {
         const t = scanner.nextToken();
-        expect((t.type, t.value), `${token.line}:${token.column}`).toBe(token);
+        expect((t.type, t.value)).toBe(token);
     });
 });
