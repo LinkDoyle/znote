@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -15,8 +15,43 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
 .App-link {
   color: #09d3ac;
+}
+
+#container {
+  width: 100%;
+  height: 100vh;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  background-color: lightyellow;
+}
+
+#left {
+    float:left;
+    width:50%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 5px;
+    border-color: violet;
+    border: 2px dashed red;
+}
+
+#right {
+  float:left;
+  width:50%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 5px;
+  border-color: violet;
+  border: 2px dashed red;
+}
+
+#editor {
+  height: 100%;
 }

@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Editor from './Editor';
+import Preview from './Preview';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const content = `# Hello Link Note
+## this a list
+* item 1
+* item 2
+* item 3
+`
+class App extends React.Component {
+  constructor(props: {}) {
+    super(props);
+  }
+
+  markdownToHTML(text: string) {
+    const lines = text.split('\n');
+    const previews = lines.map((line, i) => {
+      return (<p key={i}>{line}</p>);
+    });
+    return previews;
+  }
+
+  render() {
+    const preview = this.markdownToHTML(content);
+
+    return (
+      <div id="container" className="App">
+        <div id="left">
+          <Editor content={content}></Editor>
+        </div>
+        <div id="right">
+          <Preview content={preview}></Preview>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
