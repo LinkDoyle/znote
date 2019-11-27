@@ -8,7 +8,7 @@ const content = `# Hello Link Note
 * item 1
 * item 2
 * item 3
-`
+`;
 class App extends React.Component {
   constructor(props: {}) {
     super(props);
@@ -17,7 +17,7 @@ class App extends React.Component {
   markdownToHTML(text: string) {
     const lines = text.split('\n');
     const previews = lines.map((line, i) => {
-      return (<p key={i}>{line}</p>);
+      return <p key={i}>{line}</p>;
     });
     return previews;
   }
