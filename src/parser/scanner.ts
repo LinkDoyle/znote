@@ -102,24 +102,19 @@ export class Scanner {
     const maxLevel = 6;
     let value = '#';
     let i = 1;
-    for(; i < maxLevel; ++i) {
-        if(this._lookahead(i) !== '#') {
-          break;
-        }
-        value += '#';
+    for (; i < maxLevel; ++i) {
+      if (this._lookahead(i) !== '#') {
+        break;
+      }
+      value += '#';
     }
-    if(i === maxLevel) {
+    if (i === maxLevel) {
       return this._text();
     } else {
-      for(let j = 0; j < i; ++j) {
+      for (let j = 0; j < i; ++j) {
         this._consumeCharacter();
       }
-      return new Token(
-        this._line,
-        this._column,
-        TokenType.Hash,
-        value
-      );
+      return new Token(this._line, this._column, TokenType.Hash, value);
     }
   }
 
@@ -137,15 +132,10 @@ export class Scanner {
   private _lineBreak(): Token {
     let c = this._lookahead();
     if (c === '\r' && this._lookahead(1) === '\n') {
-        this._consumeLine();
-      }
       this._consumeLine();
-      return new Token(
-        this._line,
-        this._column,
-        TokenType.LineBreak,
-        '\\n'
-      );
+    }
+    this._consumeLine();
+    return new Token(this._line, this._column, TokenType.LineBreak, '\\n');
   }
 
   nextToken(): Token {
@@ -157,8 +147,6 @@ export class Scanner {
     let c = this._lookahead();
     while (true) {
       switch (c) {
-        case '#':
-          return this._hash();
         case '\r':
         case '\n':
           return this._lineBreak();
@@ -170,6 +158,8 @@ export class Scanner {
           this._consumeLine();
           return new Token(this._line, this._column, TokenType.Tab, '\\t');
         }
+        case '#':
+          return this._hash();
         case '*': {
           this._consumeCharacter();
           return new Token(this._line, this._column, TokenType.Star, '*');

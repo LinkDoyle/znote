@@ -1,4 +1,3 @@
-import Parser from '../parser/parser';
 import { Scanner, TokenType } from '../parser/scanner';
 import fs from 'fs';
 
@@ -32,7 +31,9 @@ fit('scanner test', () => {
   console.log(
     tokens_actual.map(
       t =>
-        `${t.line}:${t.column}`.padStart(8).padEnd(12) +
+        `${t.line}`.padStart(4) +
+        ':' +
+        `${t.column}`.padEnd(8) +
         `${TokenType[t.type]}`.padEnd(16) +
         `'${t.value}'`
     )
