@@ -72,7 +72,9 @@ export class Token {
   }
 
   toString(): string {
-    return `${this._line}:${this._column} [${TokenType[this._type]}]`;
+    return `${this._line}:${this._column} [${
+      TokenType[this._type]
+    }] "${this._value.replace(/[\\"']/g, '\\$&')}"`;
   }
 }
 
@@ -107,8 +109,8 @@ export class Lexer {
     if (this._offset + i >= this._input.length) {
       return -1;
     }
-    if (this._offset + j >= this._input.length) {
-      j = this._input.length - this._offset - 1;
+    if (this._offset + j > this._input.length) {
+      j = this._input.length - this._offset;
     }
     return this._input.substring(this._offset + i, this._offset + j);
   }
@@ -135,19 +137,18 @@ export class Lexer {
   private _hash(): Token {
     const maxLevel = 6;
     let value = '#';
-    let i = 1;
-    for (; i < maxLevel; ++i) {
-      if (this._lookahead(i) !== '#') {
+    let level = 1;
+    for (; level <= maxLevel; ++level) {
+      const c = this._lookahead(level);
+      if (c === -1 || c !== '#') {
         break;
       }
       value += '#';
     }
-    if (i === maxLevel) {
+    if (level > maxLevel) {
       return this._text();
     } else {
-      for (let j = 0; j < i; ++j) {
-        this._consumeCharacter();
-      }
+      this._consumeCharacter(level);
       return new Token(this._line, this._column, TokenType.Hash, value);
     }
   }
@@ -285,7 +286,7 @@ export class Lexer {
 
   nextToken(): Token {
     if (this._offset >= this._input.length) {
-      return new Token(this._line, this._column, TokenType.Eof);
+      return new Token(this._line, this._column, TokenType.Eof, '[EOF]');
     }
     let token: Token;
     switch (this._channel) {
@@ -298,7 +299,7 @@ export class Lexer {
       default:
         throw 'Unknown channel value:' + this._channel;
     }
-    console.log(token);
+    console.log(token.toString());
     return token;
   }
 }

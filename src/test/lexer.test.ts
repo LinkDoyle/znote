@@ -9,8 +9,7 @@ describe('lexer header', () => {
 #### h4
 ##### h5
 ###### h6
-####### h7
-`;
+####### h7`;
 
   const lexer = new Lexer(markdown);
 
@@ -39,15 +38,14 @@ describe('lexer header', () => {
     (TokenType.Hash, '######'),
     (TokenType.LeadingSpace, ' '),
     (TokenType.Text, 'h6'),
-    (TokenType.Text, '####### h7'),
     (TokenType.LineBreak, '\\n'),
-    (TokenType.Eof, ''),
+    (TokenType.Text, '####### h7'),
+    (TokenType.Eof, '[EOF]'),
   ];
 
   tokens.forEach(token => {
     const t = lexer.nextToken();
-    it(`header ${t.line}:${t.column}`, () =>
-      expect((t.type, t.value)).toBe(token));
+    it(`@ ${t.line}:${t.column}`, () => expect((t.type, t.value)).toBe(token));
   });
 });
 
