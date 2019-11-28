@@ -1,22 +1,26 @@
-import { Scanner } from './scanner';
+import { Lexer } from './lexer';
 import { Document } from './ast';
 
 export class Parser {
-  private _scanner: Scanner;
-  public get scanner(): Scanner {
-    return this._scanner;
+  private _lexer: Lexer;
+  public get lexer(): Lexer {
+    return this._lexer;
   }
-  public set scanner(v: Scanner) {
-    this._scanner = v;
-  }
-
-  constructor(scanner: Scanner) {
-    this._scanner = scanner;
+  public set lexer(v: Lexer) {
+    this._lexer = v;
   }
 
-  parseDocument(content: string): Document {
+  constructor(lexer: Lexer) {
+    this._lexer = lexer;
+  }
+
+  parseDocument(): Document {
     const document = new Document();
     return document;
+  }
+
+  parse(): Node {
+    return new Node();
   }
 }
 

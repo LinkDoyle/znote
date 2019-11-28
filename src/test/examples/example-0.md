@@ -52,3 +52,7 @@ An [example](http://example.com).
 
 2 * 3 * 4
 *srt *
+
+```json
+{
+}
