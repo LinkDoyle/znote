@@ -49,7 +49,7 @@ describe('lexer header', () => {
   });
 });
 
-xit('lexer test', () => {
+it('lexer test', () => {
   const f = fs.readFileSync(`${__dirname}/examples/example-0.md`, 'utf-8');
   const lexer = new Lexer(f);
 

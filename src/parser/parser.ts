@@ -1,5 +1,5 @@
 import { Lexer } from './lexer';
-import { Document } from './ast';
+import { Document, Node, Header } from './ast';
 
 export class Parser {
   private _lexer: Lexer;
@@ -14,13 +14,27 @@ export class Parser {
     this._lexer = lexer;
   }
 
+  private _document(): Document {
+    let document = new Document();
+    return document;
+  }
+
+  private _header(): Header {
+    let header = new Header();
+    return header;
+  }
+
+  private _text() {}
+
+  private _code() {}
+
   parseDocument(): Document {
     const document = new Document();
     return document;
   }
 
   parse(): Node {
-    return new Node();
+    return this._document();
   }
 }
 

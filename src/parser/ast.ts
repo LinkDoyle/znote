@@ -62,6 +62,7 @@ export class Document extends Node {
   constructor() {
     super();
     this._title = 'document';
+    this._children = [];
   }
 
   private _title: string;
@@ -70,6 +71,11 @@ export class Document extends Node {
   }
   public set title(v: string) {
     this._title = v;
+  }
+
+  private readonly _children: Node[];
+  public get children(): Node[] {
+    return this._children;
   }
 }
 

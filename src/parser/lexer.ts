@@ -168,8 +168,9 @@ export class Lexer {
     let c = this._lookahead();
     if (c === '\r' && this._lookahead(1) === '\n') {
       this._consumeLine(2);
+    } else {
+      this._consumeLine();
     }
-    this._consumeLine();
     return new Token(this._line, this._column, TokenType.LineBreak, '\\n');
   }
 
@@ -253,11 +254,11 @@ export class Lexer {
       case '\n':
         return this._lineBreak();
       case ' ': {
-        this._consumeLine();
+        this._consumeCharacter();
         return new Token(this._line, this._column, TokenType.LeadingSpace, ' ');
       }
       case '\t': {
-        this._consumeLine();
+        this._consumeCharacter();
         return new Token(this._line, this._column, TokenType.LeadingTab, '\\t');
       }
       case '#':
