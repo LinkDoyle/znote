@@ -1,5 +1,5 @@
-import { Lexer } from './lexer';
-import { Document, Node, Header } from './ast';
+import { Lexer, TokenType, Token } from './lexer';
+import { Document, Node, Header, Code, Text } from './ast';
 
 export class Parser {
   private _lexer: Lexer;
@@ -14,27 +14,60 @@ export class Parser {
     this._lexer = lexer;
   }
 
-  private _document(): Document {
+  private _currentToken: Token;
+  public get currentToken(): Token {
+    return this._currentToken;
+  }
+
+  private consume() {
+    this._currentToken = this.lexer.nextToken();
+  }
+
+  private parseDocument(): Document {
     let document = new Document();
+
+    loop: while (this._currentToken.type !== TokenType.Eof) {
+      switch (this._currentToken.type) {
+        case TokenType.Hash:
+          document.children.push(this.parseHeader());
+          break;
+        case TokenType.Text:
+          document.children.push(this.parseText());
+          break;
+        case TokenType.Eof:
+          break loop;
+        default:
+          this.consume();
+      }
+    }
     return document;
   }
 
-  private _header(): Header {
+  private parseHeader(): Header {
     let header = new Header();
+    this.consume();
+    while (this._currentToken.type === TokenType.LeadingSpace) {
+      this.consume();
+    }
+    header.text = this.parseText();
     return header;
   }
 
-  private _text() {}
+  private parseText() {
+    let text = new Text();
+    this.consume();
+    return text;
+  }
 
-  private _code() {}
-
-  parseDocument(): Document {
-    const document = new Document();
-    return document;
+  private parseCode() {
+    let code = new Code();
+    this.consume();
+    return code;
   }
 
   parse(): Node {
-    return this._document();
+    this._currentToken = this.lexer.nextToken();
+    return this.parseDocument();
   }
 }
 

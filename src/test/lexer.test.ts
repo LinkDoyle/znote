@@ -49,27 +49,28 @@ describe('lexer header', () => {
   });
 });
 
-it('lexer test', () => {
-  const f = fs.readFileSync(`${__dirname}/examples/example-0.md`, 'utf-8');
-  const lexer = new Lexer(f);
-
-  let tokens_actual = [];
-  let t = lexer.nextToken();
-  while (t.type !== TokenType.Eof && t.type !== TokenType.Unknown) {
+describe('lexer test', () => {
+  it('example-0.md output', () => {
+    const f = fs.readFileSync(`${__dirname}/examples/example-0.md`, 'utf-8');
+    const lexer = new Lexer(f);
+    let tokens_actual = [];
+    let t = lexer.nextToken();
+    while (t.type !== TokenType.Eof && t.type !== TokenType.Unknown) {
+      tokens_actual.push(t);
+      t = lexer.nextToken();
+    }
     tokens_actual.push(t);
-    t = lexer.nextToken();
-  }
-  tokens_actual.push(t);
-  console.log(
-    tokens_actual
-      .map(
-        t =>
-          `${t.line}`.padStart(4) +
-          ':' +
-          `${t.column}`.padEnd(8) +
-          `${TokenType[t.type]}`.padEnd(16) +
-          `'${t.value}'`
-      )
-      .join('\n')
-  );
+    console.log(
+      tokens_actual
+        .map(
+          t =>
+            `${t.line}`.padStart(4) +
+            ':' +
+            `${t.column}`.padEnd(8) +
+            `${TokenType[t.type]}`.padEnd(16) +
+            `'${t.value}'`
+        )
+        .join('\n')
+    );
+  });
 });

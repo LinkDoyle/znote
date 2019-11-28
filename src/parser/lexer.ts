@@ -5,25 +5,30 @@ export enum TokenType {
   Unknown = 0,
   Text = 1,
   Code,
-  LineBreak, //'\r\n', '\n', '\r'
-  LeadingSpace, // ' '
-  LeadingTab, // '\t'
-  Hash, // '#'
+  LineBreak,
+  LeadingSpace,
+  LeadingTab,
+  Hash,
   Underlines,
   Dashes,
-  Star, // '*'
-  Dollar, // '$'
-  GreaterThan, // '>'
-  LessThan, // '<'
-  LParenthesis, // '('
-  RParenthesis, // ')'
-  LBracket, // '['
-  RBracket, // ']'
-  LBrace, // '{'
-  RBrace, // '}'
-  Underscore, // '_'
-  Backtick, // '`'
-  TripleBacktick, // '```'
+  Star,
+  Dollar,
+  GreaterThan,
+  LessThan,
+  LParenthesis,
+  RParenthesis,
+  LBracket,
+  RBracket,
+  LBrace,
+  RBrace,
+  Underscore,
+  Backtick,
+  TripleBacktick,
+  Tilde,
+  Underline,
+  Amp,
+  At,
+  Exclamation,
 }
 
 export class Token {
@@ -156,7 +161,7 @@ export class Lexer {
   private _text(): Token {
     let c = this._lookahead();
     let value = '';
-    while (c !== -1 && c !== '\r' && c !== '\n') {
+    while (c !== -1 && '\r\n~!$&*()[]{}_`'.indexOf(c) === -1) {
       value += c;
       this._consumeCharacter();
       c = this._lookahead();
@@ -261,24 +266,74 @@ export class Lexer {
         this._consumeCharacter();
         return new Token(this._line, this._column, TokenType.LeadingTab, '\\t');
       }
-      case '#':
-        return this._hash();
-      case '*': {
+      case '~': {
         this._consumeCharacter();
-        return new Token(this._line, this._column, TokenType.Star, '*');
+        return new Token(this._line, this._column, TokenType.Tilde, '~');
       }
-      case '=':
-        return this._underlines();
-      case '-':
-        return this._dashes();
-      case '>':
-        this._consumeCharacter();
-        return new Token(this._line, this._column, TokenType.GreaterThan, '>');
       case '`': {
         if (this._lookahead(1) === '`' && this._lookahead(2) === '`') {
           this._enterCodeBlockChannel();
           return this._tripleBacktick();
         }
+      }
+      case '!': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.Exclamation, '!');
+      }
+      case '@': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.At, '@');
+      }
+      case '#': {
+        return this._hash();
+      }
+      case '$': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.Dollar, '$');
+      }
+      case '&': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.Amp, '&');
+      }
+      case '*': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.Star, '*');
+      }
+      case '(': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.LParenthesis, '(');
+      }
+      case ')': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.RParenthesis, ')');
+      }
+      case '-':
+        return this._dashes();
+      case '_': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.Underline, '_');
+      }
+      case '=':
+        return this._underlines();
+      case '>': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.GreaterThan, '>');
+      }
+      case '[': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.LBracket, '[');
+      }
+      case ']': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.RBracket, ']');
+      }
+      case '{': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.LBrace, '{');
+      }
+      case '}': {
+        this._consumeCharacter();
+        return new Token(this._line, this._column, TokenType.RBrace, '}');
       }
       default:
         return this._text();

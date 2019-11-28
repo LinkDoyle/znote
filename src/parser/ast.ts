@@ -87,6 +87,7 @@ export class Header extends Node {
   constructor() {
     super();
     this._level = 1;
+    this._text = null;
   }
 
   private _level: number;
@@ -95,6 +96,14 @@ export class Header extends Node {
   }
   public set level(v: number) {
     this._level = v;
+  }
+
+  private _text: Text | null;
+  public get text(): Text | null {
+    return this._text;
+  }
+  public set text(v: Text | null) {
+    this._text = v;
   }
 }
 
