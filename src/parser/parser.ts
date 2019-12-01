@@ -10,13 +10,14 @@ export class Parser {
     this._lexer = v;
   }
 
-  constructor(lexer: Lexer) {
-    this._lexer = lexer;
-  }
-
   private _currentToken: Token;
   public get currentToken(): Token {
     return this._currentToken;
+  }
+
+  constructor(lexer: Lexer) {
+    this._lexer = lexer;
+    this._currentToken = this.lexer.nextToken();
   }
 
   private consume() {
@@ -26,7 +27,7 @@ export class Parser {
   private parseDocument(): Document {
     let document = new Document();
 
-    loop: while (this._currentToken.type !== TokenType.Eof) {
+    while (this._currentToken.type !== TokenType.Eof) {
       switch (this._currentToken.type) {
         case TokenType.Hash:
           document.children.push(this.parseHeader());
@@ -34,8 +35,6 @@ export class Parser {
         case TokenType.Text:
           document.children.push(this.parseText());
           break;
-        case TokenType.Eof:
-          break loop;
         default:
           this.consume();
       }
@@ -45,6 +44,7 @@ export class Parser {
 
   private parseHeader(): Header {
     let header = new Header();
+    header.level = this._currentToken.value.length;
     this.consume();
     while (this._currentToken.type === TokenType.LeadingSpace) {
       this.consume();
@@ -55,7 +55,10 @@ export class Parser {
 
   private parseText() {
     let text = new Text();
-    this.consume();
+    while (this._currentToken.type === TokenType.Text) {
+      text.value = this._currentToken.value;
+      this.consume();
+    }
     return text;
   }
 
@@ -66,7 +69,6 @@ export class Parser {
   }
 
   parse(): Node {
-    this._currentToken = this.lexer.nextToken();
     return this.parseDocument();
   }
 }

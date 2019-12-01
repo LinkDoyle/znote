@@ -181,8 +181,17 @@ export class Span extends Node {
  * Text
  */
 export class Text extends Node {
-  constructor() {
+  constructor(value?: string) {
     super();
+    this._value = value ? value : '';
+  }
+
+  private _value: string;
+  public get value(): string {
+    return this._value;
+  }
+  public set value(v: string) {
+    this._value = v;
   }
 }
 
@@ -242,8 +251,22 @@ export class Math extends Span {}
 /**
  * Block
  */
-export class Block extends Node {}
+export class Block extends Node {
+  constructor() {
+    super();
+    this._children = [];
+  }
 
+  private _children: Node[];
+  public get children(): Node[] {
+    return this._children;
+  }
+  public set children(v: Node[]) {
+    this._children = v;
+  }
+}
+
+export class Paragraph extends Block {}
 /**
  * ```
  * \begin{foo}
