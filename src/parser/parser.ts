@@ -1,5 +1,5 @@
 import { Lexer, TokenType, Token } from './lexer';
-import { Document, Node, Header, Code, Text } from './ast';
+import { Document, Node, Header, Code, Text, Paragraph } from './ast';
 
 export class Parser {
   private _lexer: Lexer;
@@ -33,7 +33,7 @@ export class Parser {
           document.children.push(this.parseHeader());
           break;
         case TokenType.Text:
-          document.children.push(this.parseText());
+          document.children.push(this.parseParagraph());
           break;
         default:
           this.consume();
@@ -53,9 +53,24 @@ export class Parser {
     return header;
   }
 
+  private parseParagraph(): Paragraph {
+    let pargraph = new Paragraph();
+    while (
+      this._currentToken.type !== TokenType.Eof &&
+      this._currentToken.type !== TokenType.LineBreak
+    ) {
+      switch (this._currentToken.type) {
+        case TokenType.Text:
+          pargraph.children.push(this.parseText());
+          break;
+      }
+    }
+    return pargraph;
+  }
+
   private parseText() {
     let text = new Text();
-    while (this._currentToken.type === TokenType.Text) {
+    if (this._currentToken.type === TokenType.Text) {
       text.value = this._currentToken.value;
       this.consume();
     }
